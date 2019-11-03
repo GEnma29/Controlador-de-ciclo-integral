@@ -1,10 +1,3 @@
-# Controlador-de-ciclo-integral
-Controlador de ciclo integral con PIC16F877
-```
-### Main
-
-```c
-#include <xc.h>
 #pragma config FOSC = XT        // Oscillator Selection bits (XT oscillator)
 #pragma config WDTE = OFF       // Watchdog Timer Enable bit (WDT disabled)
 #pragma config PWRTE = OFF      // Power-up Timer Enable bit (PWRT disabled)
@@ -12,75 +5,95 @@ Controlador de ciclo integral con PIC16F877
 #pragma config BOREN = OFF      // Brown-out Reset Enable bit (BOR disabled)
 #pragma config LVP = OFF        // Low Voltage In-Circuit Serial Programming Enable bit (RB3 is digital I/O, HV on MCLR must be used for programming)
 #pragma config CPD = OFF        // Data EE Memory Code Protection (Code Protection off)
-#pragma config WRT = ON         // FLASH Program Memory Write Enable (Unprotected program memory may be written to by EECON control)
+#pragma config WRT = ON          // FLASH Program Memory Write Enable (Unprotected program memory may be written to by EECON control)
 
+#include <xc.h>
 #define _XTAL_FREQ 4000000
+unsigned int n,k;
+unsigned int  m,a;
+void PIC_Configuracion_Inicial();
 
-void main(){
-    int Cont = 0;
-    int ciclos =0;
-    int n = 0;
-    int n_1,n_2,n_4;
-    char E = 0;
-    int i = 0;
-    TRISA = 1;
-    TRISB = 0;
-    TRISC = 1;
-    if(PORTCbits.RC0 == 1){
-        E = 1;
-    }
-    if(PORTCbits.RC1 == 1){
-        E = 2;
-    }
-    if(PORTCbits.RC2 == 1){
-        E = 3;
-    }
-   
+void main(void) {
 
-    switch (E) {
-        case '1':
-            if(PORTAbits.RA2 == 1){
-                cont = cont++;
-                __delay_us(200);
-                for(n = 100; n < 1; n - cont){
-                   PORTBbits.RB2 == 1;
-                   __delay_us(200);
-                }
+    PIC_Configuracion_Inicial();
+    a = 0;
+    int b = 0;
+    int i;
+    int j;
+    int x = 0;
+
+    __delay_us(1000);
+
+    while (1) {
+        if(a == n){
+            PORTBbits.RB4 = 0;
             }
-                E = ' ';
-            break;
+        while (a < n) {
+        if ((PORTDbits.RD0 == 1) && (a < n)) {
+            PORTBbits.RB0 = 1; // pulso
+            __delay_us(50);
+            PORTBbits.RB0 = 0;
+            a = x++;
+        }
+            }
+
             
-         case '2':
-            if(PORTAbits.RA2 == 1){
-                cont = cont++;
-                __delay_us(200);
-                for(n = 100; n < 1; n - cont){
-                   PORTBbits.RB2 == 1;
-                   __delay_us(200);
-                }
-            }
-                E = ' ';
-            break;
-            
-        case '3':
-            if(PORTAbits.RA2 == 1){
-                cont = cont++;
-                __delay_us(200);
-                for(n = 100; n < 1; n - cont){
-                   PORTBbits.RB2 == 1;
-                   __delay_us(200);
-                }
-            }
-                E = ' ';
-            break;
     }
-   
+}
+    /*while (1) {
 
-   
-   
+        for (i = 0; i < 100; ) // CANTIDAD DE CILOS ENCENDIDO N
+        {
+            if (PORTCbits.RC0 == 1 && a == 0) {
+
+                PORTAbits.RA0 = 0;
+                __delay_us(50);
+                PORTAbits.RA0 = 1;
+                a = 1;
+                i++;
+            }
+            if (PORTCbits.RC0 == 0 && a == 1) {
+
+                PORTAbits.RA0 = 0;
+                __delay_us(50);
+                PORTAbits.RA0 = 1;
+                a = 0;
+                i++;
+            }
+        }
+       
+
+    }*/
+
+void __interrupt () my_isr_routine (void) {
+ if(RBIF) //Si hay cambio de estado en PORTB
+ {
+     while(m < 20 ){
+         if(PORTDbits.RD0 == 1){
+             PORTBbits.RB0 = 0;
+             m=m++;
+             a = 0;
+             } 
+         }
+    
+ RBIF = 0; //Desactivar bandera...
+ }
+}
 
 
+void PIC_Configuracion_Inicial() {
 
+    TRISD = 1;
+    TRISA = 0;
+    ADCON0 = 0b00000000;
+    TRISB = 0B11110000;
+    PORTB = 0;
+    PORTBbits.RB4 = 1;
+    RBIF = 0; // Bandera de Interrupciones del RB4 al RB7 a 0
+    INTCON = 0; // Limpia Registro INICON
+   INTCONbits.RBIE = 1; //Habilitar interrupciones de puerto B.
+   INTCONbits.RBIF = 0; //Bandera desactivada.
+   INTCONbits.GIE = 1; //Interrupciones globales habilitadas.
 }
 
 ```
