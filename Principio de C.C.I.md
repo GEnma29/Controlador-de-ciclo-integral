@@ -1,3 +1,7 @@
+```c
+
+
+
 #pragma config FOSC = XT        // Oscillator Selection bits (XT oscillator)
 #pragma config WDTE = OFF       // Watchdog Timer Enable bit (WDT disabled)
 #pragma config PWRTE = OFF      // Power-up Timer Enable bit (PWRT disabled)
@@ -40,30 +44,6 @@ void main(void) {
             
     }
 }
-    /*while (1) {
-
-        for (i = 0; i < 100; ) // CANTIDAD DE CILOS ENCENDIDO N
-        {
-            if (PORTCbits.RC0 == 1 && a == 0) {
-
-                PORTAbits.RA0 = 0;
-                __delay_us(50);
-                PORTAbits.RA0 = 1;
-                a = 1;
-                i++;
-            }
-            if (PORTCbits.RC0 == 0 && a == 1) {
-
-                PORTAbits.RA0 = 0;
-                __delay_us(50);
-                PORTAbits.RA0 = 1;
-                a = 0;
-                i++;
-            }
-        }
-       
-
-    }*/
 
 void __interrupt () my_isr_routine (void) {
  if(RBIF) //Si hay cambio de estado en PORTB
